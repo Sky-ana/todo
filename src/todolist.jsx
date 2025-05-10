@@ -257,26 +257,14 @@ const TodoList = () => {
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                     {todo.completed ? (
-                                        <>
-                                            <span style={{
-                                                fontSize: "12px",
-                                                color: "#2e7d32",
-                                                fontWeight: "bold",
-                                                marginRight: "10px",
-                                                whiteSpace: "nowrap",
-                                            }}>
-                                                Completed
-                                            </span>
-                                            {todo.completedOn && (
-                                                <span style={{
-                                                    fontSize: "12px",
-                                                    color: "#2e7d32",
-                                                    fontWeight: "bold",
-                                                }}>
-                                                    Completed on: {todo.completedOn}
-                                                </span>
-                                            )}
-                                        </>
+                                        <span style={{
+                                            fontSize: "12px",
+                                            color: "#2e7d32",
+                                            fontWeight: "bold",
+                                            marginRight: "10px",
+                                        }}>
+                                            Completed
+                                        </span>
                                     ) : (
                                         <>
                                             {todo.dueDate && (
@@ -327,11 +315,6 @@ const TodoList = () => {
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
-                            {todo.completed && (
-                                <div style={{ fontSize: "12px", color: "#555" }}>
-                                    Completed on: {todo.completedOn}
-                                </div>
-                            )}
                             {!todo.completed && todo.dueDate && (
                                 <div style={{ fontSize: "12px", color: "#555" }}>
                                     Due date: {todo.dueDate}
