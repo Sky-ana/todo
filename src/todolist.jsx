@@ -7,6 +7,7 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
+    const [modalHeight, setModalHeight] = useState(300); // Default height of the modal
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -67,6 +68,13 @@ const TodoList = () => {
         return diffDays;
     };
 
+    // Function to dynamically adjust the height of the modal based on description
+    const handleDescriptionChange = (e) => {
+        setNewDescription(e.target.value);
+        const scrollHeight = e.target.scrollHeight;
+        setModalHeight(scrollHeight + 150); // Add extra height for buttons, etc.
+    };
+
     return (
         <div
             style={{
@@ -98,6 +106,7 @@ const TodoList = () => {
                 </button>
             </div>
 
+            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -120,6 +129,9 @@ const TodoList = () => {
                             padding: "20px",
                             width: "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+                            height: `${modalHeight}px`, // Dynamically set height
+                            overflow: "hidden",
+                            transition: "height 0.2s ease",
                         }}
                     >
                         <h3>Add New Task</h3>
@@ -133,8 +145,14 @@ const TodoList = () => {
                         <textarea
                             placeholder="Description"
                             value={newDescription}
-                            onChange={(e) => setNewDescription(e.target.value)}
-                            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+                            onChange={handleDescriptionChange}
+                            style={{
+                                width: "100%",
+                                marginBottom: "10px",
+                                padding: "5px",
+                                minHeight: "50px",
+                                resize: "none",
+                            }}
                         />
                         <input
                             type="date"
