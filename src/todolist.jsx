@@ -7,13 +7,11 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
-    const [modalHeight, setModalHeight] = useState(300); // Default height of the modal
+    const [modalHeight, setModalHeight] = useState(300);
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
-        if (storedTodos) {
-            setTodos(storedTodos);
-        }
+        if (storedTodos) setTodos(storedTodos);
     }, []);
 
     useEffect(() => {
@@ -31,8 +29,8 @@ const TodoList = () => {
                     dueDate: newDueDate,
                     completed: false,
                     date: currentDate,
-                    showDescription: false, // Initially, description is hidden
-                    completedOn: null, // Initially no completion date
+                    showDescription: false,
+                    completedOn: null,
                 },
             ]);
             setNewTitle("");
@@ -43,19 +41,18 @@ const TodoList = () => {
     };
 
     const handleToggleCompleted = (index) => {
-        const updatedTodos = todos.map((todo, i) => {
+        const updated = todos.map((todo, i) => {
             if (i === index) {
-                const isNowCompleted = !todo.completed;
-                const completedOn = isNowCompleted ? new Date().toLocaleString() : null;
+                const completed = !todo.completed;
                 return {
                     ...todo,
-                    completed: isNowCompleted,
-                    completedOn,
+                    completed,
+                    completedOn: completed ? new Date().toLocaleString() : null,
                 };
             }
             return todo;
         });
-        setTodos(updatedTodos);
+        setTodos(updated);
     };
 
     const handleDeleteTodo = (index) => {
@@ -65,28 +62,25 @@ const TodoList = () => {
     const calculateDaysLeft = (dueDateStr) => {
         if (!dueDateStr) return null;
         const now = new Date();
-        const dueDate = new Date(dueDateStr + "T23:59:59");
-        const diffTime = dueDate - now;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays;
+        const due = new Date(dueDateStr + "T23:59:59");
+        const diff = due - now;
+        return Math.ceil(diff / (1000 * 60 * 60 * 24));
     };
 
-    // Toggle description visibility
     const toggleDescription = (index) => {
-        const updatedTodos = todos.map((todo, i) => {
+        const updated = todos.map((todo, i) => {
             if (i === index) {
                 return { ...todo, showDescription: !todo.showDescription };
             }
             return todo;
         });
-        setTodos(updatedTodos);
+        setTodos(updated);
     };
 
-    // Function to dynamically adjust the height of the modal based on description
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
-        const scrollHeight = e.target.scrollHeight;
-        setModalHeight(scrollHeight + 150); // Add extra height for buttons, etc.
+        const height = e.target.scrollHeight;
+        setModalHeight(height + 150);
     };
 
     return (
@@ -105,15 +99,17 @@ const TodoList = () => {
                 <h2 style={{ color: "white", textShadow: "1px 1px 2px black", marginRight: "10px" }}>
                     Todo List
                 </h2>
-                <span
+                <div
                     style={{
-                        color: "white",
+                        background: "rgba(255,255,255,0.5)",
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        fontWeight: "bold",
                         textShadow: "1px 1px 2px black",
-                        fontSize: "16px",
                     }}
                 >
                     {todos.length}
-                </span>
+                </div>
             </div>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
@@ -133,7 +129,6 @@ const TodoList = () => {
                 </button>
             </div>
 
-            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -142,7 +137,7 @@ const TodoList = () => {
                         left: 0,
                         width: "100vw",
                         height: "100vh",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        backgroundColor: "rgba(0,0,0,0.5)",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
@@ -155,8 +150,8 @@ const TodoList = () => {
                             borderRadius: "10px",
                             padding: "20px",
                             width: "300px",
+                            height: `${modalHeight}px`,
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-                            height: `${modalHeight}px`, // Dynamically set height
                             overflow: "hidden",
                             transition: "height 0.2s ease",
                         }}
@@ -175,10 +170,10 @@ const TodoList = () => {
                             onChange={handleDescriptionChange}
                             style={{
                                 width: "100%",
-                                marginBottom: "10px",
-                                padding: "5px",
                                 minHeight: "50px",
                                 resize: "none",
+                                padding: "5px",
+                                marginBottom: "10px",
                             }}
                         />
                         <input
@@ -189,12 +184,7 @@ const TodoList = () => {
                         />
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                             <button
-                                onClick={() => {
-                                    setShowModal(false);
-                                    setNewTitle("");
-                                    setNewDescription("");
-                                    setNewDueDate("");
-                                }}
+                                onClick={() => setShowModal(false)}
                                 style={{
                                     backgroundColor: "#aaa",
                                     color: "white",
@@ -233,17 +223,11 @@ const TodoList = () => {
                                 borderRadius: "8px",
                                 padding: "10px",
                                 marginBottom: "10px",
-                                background: "rgba(255, 255, 255, 0.7)",
+                                background: "rgba(255,255,255,0.7)",
                                 backdropFilter: "blur(4px)",
                             }}
                         >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                }}
-                            >
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                 <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
                                     <input
                                         type="checkbox"
@@ -251,6 +235,7 @@ const TodoList = () => {
                                         onChange={() => handleToggleCompleted(index)}
                                     />
                                     <span
+                                        onClick={() => toggleDescription(index)}
                                         style={{
                                             textDecoration: todo.completed ? "line-through" : "none",
                                             marginLeft: "10px",
@@ -261,13 +246,12 @@ const TodoList = () => {
                                             flex: 1,
                                             cursor: "pointer",
                                         }}
-                                        onClick={() => toggleDescription(index)} // Clicking title will toggle description
                                     >
                                         {todo.title}
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
-                                    {todo.dueDate && !todo.completed && (
+                                    {!todo.completed && todo.dueDate && (
                                         <span
                                             style={{
                                                 fontSize: "12px",
@@ -282,7 +266,7 @@ const TodoList = () => {
                                                 : `${daysLeft} day(s) left`}
                                         </span>
                                     )}
-                                    {todo.completed && todo.completedOn && (
+                                    {todo.completed && (
                                         <span
                                             style={{
                                                 fontSize: "12px",
@@ -309,8 +293,6 @@ const TodoList = () => {
                                     </button>
                                 </div>
                             </div>
-
-                            {/* Show description only if it's toggled */}
                             {todo.showDescription && (
                                 <div
                                     style={{
@@ -319,18 +301,10 @@ const TodoList = () => {
                                         wordWrap: "break-word",
                                         overflow: "hidden",
                                         textOverflow: "ellipsis",
+                                        whiteSpace: "pre-wrap",
                                     }}
                                 >
                                     {todo.description}
-                                </div>
-                            )}
-
-                            <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                Added on: {todo.date}
-                            </div>
-                            {todo.dueDate && (
-                                <div style={{ fontSize: "12px", color: "#555" }}>
-                                    Due date: {todo.dueDate}
                                 </div>
                             )}
                         </li>
