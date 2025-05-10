@@ -101,8 +101,10 @@ const TodoList = () => {
                 backgroundAttachment: "fixed",
             }}
         >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <h2 style={{ color: "white", textShadow: "1px 1px 2px black", marginRight: "10px" }}>
+                    Todo List
+                </h2>
                 <span
                     style={{
                         color: "white",
