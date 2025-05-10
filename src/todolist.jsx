@@ -59,6 +59,10 @@ const TodoList = () => {
         setTodos(todos.filter((_, i) => i !== index));
     };
 
+    const handleToggleExpand = (index) => {
+        setExpandedIndex(expandedIndex === index ? null : index);
+    };
+
     const calculateDaysLeft = (dueDateStr) => {
         if (!dueDateStr) return null;
         const now = new Date();
@@ -66,10 +70,6 @@ const TodoList = () => {
         const diffTime = dueDate - now;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
-    };
-
-    const handleToggleExpand = (index) => {
-        setExpandedIndex(expandedIndex === index ? null : index);
     };
 
     return (
@@ -88,13 +88,12 @@ const TodoList = () => {
                 Todo List
                 <span
                     style={{
-                        backgroundColor: "rgba(255,255,255,0.7)",
+                        background: "rgba(255, 255, 255, 0.7)",
                         backdropFilter: "blur(4px)",
+                        padding: "2px 8px",
                         borderRadius: "8px",
-                        padding: "2px 10px",
+                        color: "black",
                         fontSize: "16px",
-                        fontWeight: "bold",
-                        color: "#333",
                     }}
                 >
                     {todos.length}
@@ -118,7 +117,6 @@ const TodoList = () => {
                 </button>
             </div>
 
-            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -140,8 +138,6 @@ const TodoList = () => {
                             borderRadius: "10px",
                             padding: "20px",
                             width: "300px",
-                            maxHeight: "80vh",
-                            overflowY: "auto",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
                         }}
                     >
@@ -203,7 +199,6 @@ const TodoList = () => {
             <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
                 {todos.map((todo, index) => {
                     const daysLeft = calculateDaysLeft(todo.dueDate);
-                    const isExpanded = expandedIndex === index;
                     return (
                         <li
                             key={index}
@@ -215,8 +210,8 @@ const TodoList = () => {
                                 marginBottom: "10px",
                                 background: "rgba(255, 255, 255, 0.7)",
                                 backdropFilter: "blur(4px)",
-                                wordWrap: "break-word",
                                 cursor: "pointer",
+                                wordWrap: "break-word",
                             }}
                         >
                             <div style={{ display: "flex", alignItems: "center" }}>
@@ -234,7 +229,6 @@ const TodoList = () => {
                                         marginLeft: "10px",
                                         fontWeight: "bold",
                                         flex: 1,
-                                        overflowWrap: "break-word",
                                     }}
                                 >
                                     {todo.title}
@@ -258,12 +252,6 @@ const TodoList = () => {
                                 </button>
                             </div>
 
-                            {todo.description && isExpanded && (
-                                <div style={{ marginTop: "5px", fontStyle: "italic" }}>
-                                    {todo.description}
-                                </div>
-                            )}
-
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
@@ -281,14 +269,18 @@ const TodoList = () => {
                                     textAlign: "right",
                                 }}
                             >
-                                {todo.completed && todo.completedOn
+                                {todo.completed
                                     ? `Completed on: ${todo.completedOn}`
-                                    : todo.dueDate
-                                    ? daysLeft < 0
-                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                        : `${daysLeft} day(s) left`
-                                    : ""}
+                                    : daysLeft < 0
+                                    ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                    : `${daysLeft} day(s) left`}
                             </div>
+
+                            {expandedIndex === index && todo.description && (
+                                <div style={{ marginTop: "5px", fontStyle: "italic" }}>
+                                    {todo.description}
+                                </div>
+                            )}
                         </li>
                     );
                 })}
