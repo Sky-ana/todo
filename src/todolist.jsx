@@ -50,9 +50,20 @@ const TodoList = () => {
                     Add
                 </button>
             </div>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
                 {todos.map((todo, index) => (
-                    <li key={index} style={{ margin: "10px 0" }}>
+                    <li
+                        key={index}
+                        style={{
+                            border: "1px solid #ccc",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            marginBottom: "10px",
+                            display: "flex",
+                            alignItems: "center",
+                            background: "#f9f9f9",
+                        }}
+                    >
                         <input
                             type="checkbox"
                             checked={todo.completed}
@@ -62,6 +73,7 @@ const TodoList = () => {
                             style={{
                                 textDecoration: todo.completed ? "line-through" : "none",
                                 marginLeft: "10px",
+                                flex: 1,
                             }}
                         >
                             {todo.text}
@@ -69,12 +81,12 @@ const TodoList = () => {
                         <button
                             onClick={() => handleDeleteTodo(index)}
                             style={{
-                                marginLeft: "10px",
                                 background: "red",
                                 color: "white",
                                 border: "none",
-                                padding: "2px 5px",
+                                padding: "5px 10px",
                                 cursor: "pointer",
+                                borderRadius: "4px",
                             }}
                         >
                             Delete
