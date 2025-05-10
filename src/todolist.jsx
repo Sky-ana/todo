@@ -83,7 +83,7 @@ const TodoList = () => {
     const getDisplayTitle = (todo) => {
         return todo.showDescription || todo.title.length <= 10
             ? todo.title
-            : `${todo.title.slice(0, 3)}...`;
+            : `${todo.title.slice(0, 5)}...`;
     };
 
     return (
