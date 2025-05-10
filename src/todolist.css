@@ -125,8 +125,8 @@
 
 .todo-textarea,
 .no-resize {
-    min-height: 50px;
-    resize: none;
+    min-height: 80px;
+    resize: vertical;
 }
 
 .todo-modal-btn-row {
@@ -193,6 +193,7 @@
     flex-direction: column;
     gap: 5px;
     flex: 1;
+    min-width: 0;
 }
 
 .completed-task strong,
@@ -272,6 +273,11 @@
     word-wrap: break-word;
     color: #555;
     font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    max-height: 4.5em;
 }
 
 .todo-meta {
@@ -341,8 +347,11 @@
 
     .edit-section input,
     .edit-section textarea {
-        width: 100%;
-        box-sizing: border-box;
+        /* width: 100%;
+        box-sizing: border-box; */
+        min-height: 80px;
+        /* Give more space for editing */
+        resize: vertical;
     }
 
     .todo-header {
@@ -357,5 +366,16 @@
 
     .todo-header {
         font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .task-desc {
+        max-height: 3em;
+    }
+
+    .todo-item {
+        word-break: break-word;
+        /* Ensure long words break */
     }
 }
