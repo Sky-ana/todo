@@ -246,7 +246,9 @@ const TodoList = () => {
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",
                                             flex: 1,
+                                            cursor: "pointer",
                                         }}
+                                        onClick={() => toggleDescription(index)} // Clicking title will toggle description
                                     >
                                         {todo.title}
                                     </span>
