@@ -21,7 +21,7 @@ const TodoList = () => {
     }, [todos]);
 
     const handleAddTodo = () => {
-        if (newTitle.trim() !== "" || newDescription.trim() !== "") {
+        if (newTitle.trim() !== "") {
             const currentDate = new Date().toLocaleString();
             setTodos([
                 ...todos,
@@ -68,6 +68,10 @@ const TodoList = () => {
         return diffDays;
     };
 
+    const handleToggleExpand = (index) => {
+        setExpandedIndex(expandedIndex === index ? null : index);
+    };
+
     return (
         <div
             style={{
@@ -84,12 +88,13 @@ const TodoList = () => {
                 Todo List
                 <span
                     style={{
-                        background: "rgba(255, 255, 255, 0.7)",
-                        padding: "4px 10px",
+                        backgroundColor: "rgba(255,255,255,0.7)",
+                        backdropFilter: "blur(4px)",
                         borderRadius: "8px",
+                        padding: "2px 10px",
                         fontSize: "16px",
-                        color: "#333",
                         fontWeight: "bold",
+                        color: "#333",
                     }}
                 >
                     {todos.length}
@@ -134,7 +139,9 @@ const TodoList = () => {
                             backgroundColor: "white",
                             borderRadius: "10px",
                             padding: "20px",
-                            width: newDescription.length > 100 ? "400px" : "300px",
+                            width: "300px",
+                            maxHeight: "80vh",
+                            overflowY: "auto",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
                         }}
                     >
@@ -150,7 +157,7 @@ const TodoList = () => {
                             placeholder="Description"
                             value={newDescription}
                             onChange={(e) => setNewDescription(e.target.value)}
-                            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+                            style={{ width: "100%", marginBottom: "10px", padding: "5px", resize: "vertical" }}
                         />
                         <input
                             type="date"
@@ -197,10 +204,10 @@ const TodoList = () => {
                 {todos.map((todo, index) => {
                     const daysLeft = calculateDaysLeft(todo.dueDate);
                     const isExpanded = expandedIndex === index;
-
                     return (
                         <li
                             key={index}
+                            onClick={() => handleToggleExpand(index)}
                             style={{
                                 border: "1px solid #ccc",
                                 borderRadius: "8px",
@@ -208,54 +215,30 @@ const TodoList = () => {
                                 marginBottom: "10px",
                                 background: "rgba(255, 255, 255, 0.7)",
                                 backdropFilter: "blur(4px)",
-                                overflowWrap: "break-word",
+                                wordWrap: "break-word",
+                                cursor: "pointer",
                             }}
                         >
-                            <div
-                                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}
-                                onClick={() => setExpandedIndex(isExpanded ? null : index)}
-                            >
-                                <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={todo.completed}
-                                        onChange={(e) => {
-                                            e.stopPropagation();
-                                            handleToggleCompleted(index);
-                                        }}
-                                    />
-                                    <span
-                                        style={{
-                                            textDecoration: todo.completed ? "line-through" : "none",
-                                            marginLeft: "10px",
-                                            fontWeight: "bold",
-                                            wordBreak: "break-word",
-                                        }}
-                                    >
-                                        {todo.title}
-                                    </span>
-                                </div>
-                                <div
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                <input
+                                    type="checkbox"
+                                    checked={todo.completed}
+                                    onChange={(e) => {
+                                        e.stopPropagation();
+                                        handleToggleCompleted(index);
+                                    }}
+                                />
+                                <span
                                     style={{
-                                        fontSize: "12px",
-                                        fontWeight: "bold",
+                                        textDecoration: todo.completed ? "line-through" : "none",
                                         marginLeft: "10px",
-                                        textAlign: "right",
-                                        color: todo.completed && todo.completedOn
-                                            ? "#28a745"
-                                            : daysLeft < 0
-                                            ? "red"
-                                            : "#333",
+                                        fontWeight: "bold",
+                                        flex: 1,
+                                        overflowWrap: "break-word",
                                     }}
                                 >
-                                    {todo.completed && todo.completedOn
-                                        ? `Completed: ${todo.completedOn}`
-                                        : todo.dueDate
-                                        ? daysLeft < 0
-                                            ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                            : `${daysLeft} day(s) left`
-                                        : ""}
-                                </div>
+                                    {todo.title}
+                                </span>
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
@@ -275,23 +258,37 @@ const TodoList = () => {
                                 </button>
                             </div>
 
-                            {isExpanded && (
-                                <>
-                                    {todo.description && (
-                                        <div style={{ marginTop: "5px", fontStyle: "italic" }}>
-                                            {todo.description}
-                                        </div>
-                                    )}
-                                    <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                        Added on: {todo.date}
-                                    </div>
-                                    {todo.dueDate && (
-                                        <div style={{ fontSize: "12px", color: "#555" }}>
-                                            Due date: {todo.dueDate}
-                                        </div>
-                                    )}
-                                </>
+                            {todo.description && isExpanded && (
+                                <div style={{ marginTop: "5px", fontStyle: "italic" }}>
+                                    {todo.description}
+                                </div>
                             )}
+
+                            <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                                Added on: {todo.date}
+                            </div>
+                            {todo.dueDate && (
+                                <div style={{ fontSize: "12px", color: "#555" }}>
+                                    Due date: {todo.dueDate}
+                                </div>
+                            )}
+
+                            <div
+                                style={{
+                                    fontSize: "12px",
+                                    color: todo.completed ? "#2e7d32" : daysLeft < 0 ? "red" : "#333",
+                                    fontWeight: "bold",
+                                    textAlign: "right",
+                                }}
+                            >
+                                {todo.completed && todo.completedOn
+                                    ? `Completed on: ${todo.completedOn}`
+                                    : todo.dueDate
+                                    ? daysLeft < 0
+                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                        : `${daysLeft} day(s) left`
+                                    : ""}
+                            </div>
                         </li>
                     );
                 })}
