@@ -33,9 +33,17 @@ const TodoList = () => {
     };
 
     const handleToggleCompleted = (index) => {
-        const updatedTodos = todos.map((todo, i) =>
-            i === index ? { ...todo, completed: !todo.completed } : todo
-        );
+        const updatedTodos = todos.map((todo, i) => {
+            if (i === index) {
+                const isNowCompleted = !todo.completed;
+                return {
+                    ...todo,
+                    completed: isNowCompleted,
+                    completedOn: isNowCompleted ? new Date().toLocaleString() : undefined,
+                };
+            }
+            return todo;
+        });
         setTodos(updatedTodos);
     };
 
@@ -52,7 +60,7 @@ const TodoList = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                backgroundAttachment: "fixed", // 🔒 Keeps image fixed while scrolling
+                backgroundAttachment: "fixed",
             }}
         >
             <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
@@ -113,6 +121,11 @@ const TodoList = () => {
                         <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                             Added on: {todo.date}
                         </div>
+                        {todo.completed && todo.completedOn && (
+                            <div style={{ fontSize: "12px", color: "#2e7d32", marginTop: "3px" }}>
+                                Completed on: {todo.completedOn}
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>
