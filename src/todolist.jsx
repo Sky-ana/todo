@@ -7,7 +7,6 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
-    const [modalHeight, setModalHeight] = useState(300);
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -83,8 +82,6 @@ const TodoList = () => {
 
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
-        const scrollHeight = e.target.scrollHeight;
-        setModalHeight(scrollHeight + 150);
     };
 
     return (
@@ -144,9 +141,8 @@ const TodoList = () => {
                             padding: "20px",
                             width: "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-                            height: `${modalHeight}px`,
-                            overflow: "hidden",
-                            transition: "height 0.2s ease",
+                            maxHeight: "90vh",
+                            overflowY: "auto",
                         }}
                     >
                         <h3>Add New Task</h3>
