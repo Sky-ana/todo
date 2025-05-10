@@ -98,7 +98,6 @@ const TodoList = () => {
                 </button>
             </div>
 
-            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -193,36 +192,54 @@ const TodoList = () => {
                                 backdropFilter: "blur(4px)",
                             }}
                         >
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <input
-                                    type="checkbox"
-                                    checked={todo.completed}
-                                    onChange={() => handleToggleCompleted(index)}
-                                />
-                                <span
-                                    style={{
-                                        textDecoration: todo.completed ? "line-through" : "none",
-                                        marginLeft: "10px",
-                                        fontWeight: "bold",
-                                        flex: 1,
-                                    }}
-                                >
-                                    {todo.title}
-                                </span>
-                                <button
-                                    onClick={() => handleDeleteTodo(index)}
-                                    style={{
-                                        background: "transparent",
-                                        color: "red",
-                                        border: "none",
-                                        fontSize: "20px",
-                                        fontWeight: "bold",
-                                        cursor: "pointer",
-                                        marginLeft: "10px",
-                                    }}
-                                >
-                                    ×
-                                </button>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={todo.completed}
+                                        onChange={() => handleToggleCompleted(index)}
+                                    />
+                                    <span
+                                        style={{
+                                            textDecoration: todo.completed ? "line-through" : "none",
+                                            marginLeft: "10px",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {todo.title}
+                                    </span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    {todo.dueDate && (
+                                        <span
+                                            style={{
+                                                fontSize: "12px",
+                                                color: daysLeft < 0 ? "red" : "#333",
+                                                fontWeight: "bold",
+                                                marginRight: "10px",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                        >
+                                            {daysLeft < 0
+                                                ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                                : `${daysLeft} day(s) left`}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={() => handleDeleteTodo(index)}
+                                        style={{
+                                            background: "transparent",
+                                            color: "red",
+                                            border: "none",
+                                            fontSize: "20px",
+                                            fontWeight: "bold",
+                                            cursor: "pointer",
+                                            marginLeft: "5px",
+                                        }}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
                             </div>
                             {todo.description && (
                                 <div style={{ marginTop: "5px", fontStyle: "italic" }}>
@@ -235,19 +252,6 @@ const TodoList = () => {
                             {todo.dueDate && (
                                 <div style={{ fontSize: "12px", color: "#555" }}>
                                     Due date: {todo.dueDate}
-                                </div>
-                            )}
-                            {todo.dueDate && (
-                                <div
-                                    style={{
-                                        fontSize: "12px",
-                                        color: daysLeft < 0 ? "red" : "#333",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    {daysLeft < 0
-                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                        : `${daysLeft} day(s) left`}
                                 </div>
                             )}
                             {todo.completed && todo.completedOn && (
