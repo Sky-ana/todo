@@ -50,7 +50,7 @@ Open this link 🔗:
 **Skills:** React.js, HTML, CSS, JavaScript, PHP
 
 ### Michael Rhoi L. Gonzales  
-**Role:** Frontend Developer, UI/UX Designer 
+**Role:** Frontend Developer, UI/UX Designer  
 **Skills:** React.js, HTML, CSS, JavaScript, Tailwind, Figma
 
 ---
