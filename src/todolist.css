@@ -101,12 +101,9 @@
     padding: 20px;
     width: 300px;
     min-height: 220px;
-    /* Set a sensible minimum height */
     max-height: 90vh;
-    /* Prevent modal from growing too tall */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
-    /* Scroll if content overflows */
     transition: box-shadow 0.2s;
 }
 
@@ -347,10 +344,7 @@
 
     .edit-section input,
     .edit-section textarea {
-        /* width: 100%;
-        box-sizing: border-box; */
         min-height: 80px;
-        /* Give more space for editing */
         resize: vertical;
     }
 
@@ -376,6 +370,37 @@
 
     .todo-item {
         word-break: break-word;
-        /* Ensure long words break */
+    }
+}
+
+@media (max-width: 480px) {
+    .todo-item {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .todo-item input[type="checkbox"] {
+        margin: 7px 10px 0 0;
+    }
+
+    .todo-delete-btn,
+    .delete-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+    }
+
+    .task-text-group {
+        min-width: 0;
+        width: calc(100% - 60px);
+    }
+
+    .todo-item {
+        word-break: normal;
     }
 }
