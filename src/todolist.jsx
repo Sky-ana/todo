@@ -19,7 +19,17 @@ const TodoList = () => {
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
-            setTodos([...todos, { text: newTodo, completed: false }]);
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleString(); // e.g., "5/10/2025, 3:15:30 PM"
+
+            setTodos([
+                ...todos,
+                {
+                    text: newTodo,
+                    completed: false,
+                    date: formattedDate,
+                },
+            ]);
             setNewTodo("");
         }
     };
@@ -50,31 +60,19 @@ const TodoList = () => {
                     Add
                 </button>
             </div>
-
-            {/* Grid container for tasks */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-                    gap: "15px",
-                    marginTop: "20px",
-                }}
-            >
+            <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
                 {todos.map((todo, index) => (
-                    <div
+                    <li
                         key={index}
                         style={{
                             border: "1px solid #ccc",
                             borderRadius: "8px",
                             padding: "10px",
+                            marginBottom: "10px",
                             background: "#f9f9f9",
-                            height: "150px",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "space-between",
                         }}
                     >
-                        <div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
                             <input
                                 type="checkbox"
                                 checked={todo.completed}
@@ -84,29 +82,32 @@ const TodoList = () => {
                                 style={{
                                     textDecoration: todo.completed ? "line-through" : "none",
                                     marginLeft: "10px",
-                                    wordBreak: "break-word",
+                                    flex: 1,
                                 }}
                             >
                                 {todo.text}
                             </span>
+                            <button
+                                onClick={() => handleDeleteTodo(index)}
+                                style={{
+                                    background: "red",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "5px 10px",
+                                    cursor: "pointer",
+                                    borderRadius: "4px",
+                                    marginLeft: "10px",
+                                }}
+                            >
+                                Delete
+                            </button>
                         </div>
-                        <button
-                            onClick={() => handleDeleteTodo(index)}
-                            style={{
-                                background: "red",
-                                color: "white",
-                                border: "none",
-                                padding: "5px",
-                                borderRadius: "4px",
-                                cursor: "pointer",
-                                alignSelf: "flex-end",
-                            }}
-                        >
-                            Delete
-                        </button>
-                    </div>
+                        <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                            Added on: {todo.date}
+                        </div>
+                    </li>
                 ))}
-            </div>
+            </ul>
         </div>
     );
 };
