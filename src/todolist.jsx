@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import backgroundImage from "./pics/magic.jpg"; // ✅ import the background image
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState("");
 
+    // Load todos from localStorage on initial render
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
         if (storedTodos) {
@@ -12,6 +12,7 @@ const TodoList = () => {
         }
     }, []);
 
+    // Save todos to localStorage whenever they change
     useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]);
@@ -19,7 +20,8 @@ const TodoList = () => {
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
             const currentDate = new Date();
-            const formattedDate = currentDate.toLocaleString();
+            const formattedDate = currentDate.toLocaleString(); // e.g., "5/10/2025, 3:15:30 PM"
+
             setTodos([
                 ...todos,
                 {
@@ -44,17 +46,8 @@ const TodoList = () => {
     };
 
     return (
-        <div
-            style={{
-                padding: "20px",
-                minHeight: "100vh",
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-            }}
-        >
-            <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
+        <div style={{ padding: "20px" }}>
+            <h2>Todo List</h2>
             <div>
                 <input
                     type="text"
