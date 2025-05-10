@@ -7,7 +7,7 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
-    const [modalHeight, setModalHeight] = useState(300); // Default height of the modal
+    const [modalHeight, setModalHeight] = useState(300);
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -31,8 +31,8 @@ const TodoList = () => {
                     dueDate: newDueDate,
                     completed: false,
                     date: currentDate,
-                    showDescription: false, // Initially, description is hidden
-                    completedOn: null, // Initially no completion date
+                    showDescription: false,
+                    completedOn: null,
                 },
             ]);
             setNewTitle("");
@@ -71,7 +71,6 @@ const TodoList = () => {
         return diffDays;
     };
 
-    // Toggle description visibility
     const toggleDescription = (index) => {
         const updatedTodos = todos.map((todo, i) => {
             if (i === index) {
@@ -82,11 +81,10 @@ const TodoList = () => {
         setTodos(updatedTodos);
     };
 
-    // Function to dynamically adjust the height of the modal based on description
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
         const scrollHeight = e.target.scrollHeight;
-        setModalHeight(scrollHeight + 150); // Add extra height for buttons, etc.
+        setModalHeight(scrollHeight + 150);
     };
 
     return (
@@ -102,16 +100,9 @@ const TodoList = () => {
             }}
         >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
-                <span
-                    style={{
-                        color: "white",
-                        textShadow: "1px 1px 2px black",
-                        fontSize: "16px",
-                    }}
-                >
-                    Total Tasks: {todos.length}
-                </span>
+                <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>
+                    Todo List {todos.length}
+                </h2>
             </div>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
@@ -131,7 +122,6 @@ const TodoList = () => {
                 </button>
             </div>
 
-            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -154,7 +144,7 @@ const TodoList = () => {
                             padding: "20px",
                             width: "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-                            height: `${modalHeight}px`, // Dynamically set height
+                            height: `${modalHeight}px`,
                             overflow: "hidden",
                             transition: "height 0.2s ease",
                         }}
@@ -259,7 +249,7 @@ const TodoList = () => {
                                             flex: 1,
                                             cursor: "pointer",
                                         }}
-                                        onClick={() => toggleDescription(index)} // Clicking title will toggle description
+                                        onClick={() => toggleDescription(index)}
                                     >
                                         {todo.title}
                                     </span>
@@ -308,7 +298,6 @@ const TodoList = () => {
                                 </div>
                             </div>
 
-                            {/* Show description only if it's toggled */}
                             {todo.showDescription && (
                                 <div
                                     style={{
