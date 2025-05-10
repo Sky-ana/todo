@@ -31,6 +31,7 @@ const TodoList = () => {
                     dueDate: newDueDate,
                     completed: false,
                     date: currentDate,
+                    showDescription: false, // Initially, description is hidden
                 },
             ]);
             setNewTitle("");
@@ -66,6 +67,17 @@ const TodoList = () => {
         const diffTime = dueDate - now;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
+    };
+
+    // Toggle description visibility
+    const toggleDescription = (index) => {
+        const updatedTodos = todos.map((todo, i) => {
+            if (i === index) {
+                return { ...todo, showDescription: !todo.showDescription };
+            }
+            return todo;
+        });
+        setTodos(updatedTodos);
     };
 
     // Function to dynamically adjust the height of the modal based on description
@@ -210,7 +222,13 @@ const TodoList = () => {
                                 backdropFilter: "blur(4px)",
                             }}
                         >
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
                                 <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
                                     <input
                                         type="checkbox"
@@ -222,9 +240,9 @@ const TodoList = () => {
                                             textDecoration: todo.completed ? "line-through" : "none",
                                             marginLeft: "10px",
                                             fontWeight: "bold",
-                                            wordWrap: "break-word", // Ensures text wraps within the container
-                                            overflow: "hidden", // Ensures text doesn't overflow
-                                            textOverflow: "ellipsis", // Adds an ellipsis when text overflows
+                                            wordWrap: "break-word",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                             flex: 1,
                                         }}
                                     >
@@ -263,19 +281,22 @@ const TodoList = () => {
                                     </button>
                                 </div>
                             </div>
-                            {todo.description && (
+
+                            {/* Show description only if it's toggled */}
+                            {todo.showDescription && (
                                 <div
                                     style={{
                                         marginTop: "5px",
                                         fontStyle: "italic",
-                                        wordWrap: "break-word", // Ensures the description text breaks when needed
-                                        overflow: "hidden", // Ensures description doesn't overflow
-                                        textOverflow: "ellipsis", // Adds ellipsis when description overflows
+                                        wordWrap: "break-word",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
                                     }}
                                 >
                                     {todo.description}
                                 </div>
                             )}
+
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
@@ -289,6 +310,20 @@ const TodoList = () => {
                                     Completed on: {todo.completedOn}
                                 </div>
                             )}
+
+                            {/* Add a click event to toggle description */}
+                            <div
+                                onClick={() => toggleDescription(index)}
+                                style={{
+                                    marginTop: "5px",
+                                    color: "#0066cc",
+                                    cursor: "pointer",
+                                    fontSize: "14px",
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                {todo.showDescription ? "Hide Description" : "Show Description"}
+                            </div>
                         </li>
                     );
                 })}
