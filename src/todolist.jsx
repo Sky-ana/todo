@@ -84,7 +84,7 @@ const TodoList = () => {
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
         const scrollHeight = e.target.scrollHeight;
-        setModalHeight(scrollHeight + 200);  // Adjust to avoid clipping
+        setModalHeight(scrollHeight + 200);
     };
 
     return (
@@ -252,19 +252,25 @@ const TodoList = () => {
                                         onChange={() => handleToggleCompleted(index)}
                                     />
                                     <span
+                                        title={todo.title}
                                         style={{
                                             textDecoration: todo.completed ? "line-through" : "none",
                                             marginLeft: "10px",
                                             fontWeight: "bold",
-                                            wordWrap: "break-word",
                                             overflow: "hidden",
+                                            whiteSpace: "nowrap",
                                             textOverflow: "ellipsis",
-                                            flex: 1,
+                                            maxWidth: "150px",
+                                            flexShrink: 1,
                                             cursor: "pointer",
                                         }}
                                         onClick={() => toggleDescription(index)}
                                     >
-                                        {todo.title}
+                                        {todo.showDescription
+                                            ? todo.title
+                                            : todo.title.length > 6
+                                            ? todo.title.slice(0, 3) + ".."
+                                            : todo.title}
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
