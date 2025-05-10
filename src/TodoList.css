@@ -1,0 +1,10 @@
+@media (max-width: 600px) {
+  .task-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-meta .completed-on {
+    margin-top: 4px;
+  }
+}
