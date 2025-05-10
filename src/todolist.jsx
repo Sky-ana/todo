@@ -7,7 +7,7 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
-    const [expandedTasks, setExpandedTasks] = useState([]);
+    const [expandedIndex, setExpandedIndex] = useState(null);
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -59,14 +59,6 @@ const TodoList = () => {
         setTodos(todos.filter((_, i) => i !== index));
     };
 
-    const toggleDescription = (index) => {
-        setExpandedTasks((prev) =>
-            prev.includes(index)
-                ? prev.filter((i) => i !== index)
-                : [...prev, index]
-        );
-    };
-
     const calculateDaysLeft = (dueDateStr) => {
         if (!dueDateStr) return null;
         const now = new Date();
@@ -97,6 +89,7 @@ const TodoList = () => {
                         borderRadius: "8px",
                         fontSize: "16px",
                         color: "#333",
+                        fontWeight: "bold",
                     }}
                 >
                     {todos.length}
@@ -120,6 +113,7 @@ const TodoList = () => {
                 </button>
             </div>
 
+            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -140,7 +134,7 @@ const TodoList = () => {
                             backgroundColor: "white",
                             borderRadius: "10px",
                             padding: "20px",
-                            width: "300px",
+                            width: newDescription.length > 100 ? "400px" : "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
                         }}
                     >
@@ -157,7 +151,6 @@ const TodoList = () => {
                             value={newDescription}
                             onChange={(e) => setNewDescription(e.target.value)}
                             style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
-                            rows={Math.max(3, newDescription.split("\n").length)}
                         />
                         <input
                             type="date"
@@ -203,6 +196,8 @@ const TodoList = () => {
             <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
                 {todos.map((todo, index) => {
                     const daysLeft = calculateDaysLeft(todo.dueDate);
+                    const isExpanded = expandedIndex === index;
+
                     return (
                         <li
                             key={index}
@@ -213,53 +208,59 @@ const TodoList = () => {
                                 marginBottom: "10px",
                                 background: "rgba(255, 255, 255, 0.7)",
                                 backdropFilter: "blur(4px)",
-                                wordWrap: "break-word",
                                 overflowWrap: "break-word",
                             }}
                         >
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <input
-                                    type="checkbox"
-                                    checked={todo.completed}
-                                    onChange={() => handleToggleCompleted(index)}
-                                />
-                                <div
-                                    onClick={() => toggleDescription(index)}
-                                    style={{
-                                        marginLeft: "10px",
-                                        flex: 1,
-                                        cursor: "pointer",
-                                        wordWrap: "break-word",
-                                    }}
-                                >
-                                    <div
+                            <div
+                                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}
+                                onClick={() => setExpandedIndex(isExpanded ? null : index)}
+                            >
+                                <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={todo.completed}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleToggleCompleted(index);
+                                        }}
+                                    />
+                                    <span
                                         style={{
-                                            fontWeight: "bold",
                                             textDecoration: todo.completed ? "line-through" : "none",
+                                            marginLeft: "10px",
+                                            fontWeight: "bold",
+                                            wordBreak: "break-word",
                                         }}
                                     >
                                         {todo.title}
-                                    </div>
-                                    <div style={{ fontSize: "12px", color: "#333" }}>
-                                        Date Added: {todo.date}
-                                    </div>
-                                    {todo.dueDate && (
-                                        <div style={{ fontSize: "12px", color: "#333" }}>
-                                            Due Date: {todo.dueDate}
-                                        </div>
-                                    )}
+                                    </span>
                                 </div>
-                                <div style={{ fontSize: "12px", fontWeight: "bold", marginLeft: "10px", textAlign: "right" }}>
+                                <div
+                                    style={{
+                                        fontSize: "12px",
+                                        fontWeight: "bold",
+                                        marginLeft: "10px",
+                                        textAlign: "right",
+                                        color: todo.completed && todo.completedOn
+                                            ? "#28a745"
+                                            : daysLeft < 0
+                                            ? "red"
+                                            : "#333",
+                                    }}
+                                >
                                     {todo.completed && todo.completedOn
                                         ? `Completed: ${todo.completedOn}`
                                         : todo.dueDate
                                         ? daysLeft < 0
-                                            ? `Overdue by ${Math.abs(daysLeft)}d`
-                                            : `${daysLeft}d left`
+                                            ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                            : `${daysLeft} day(s) left`
                                         : ""}
                                 </div>
                                 <button
-                                    onClick={() => handleDeleteTodo(index)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteTodo(index);
+                                    }}
                                     style={{
                                         background: "transparent",
                                         color: "red",
@@ -273,8 +274,23 @@ const TodoList = () => {
                                     ×
                                 </button>
                             </div>
-                            {expandedTasks.includes(index) && todo.description && (
-                                <div style={{ marginTop: "8px", fontStyle: "italic" }}>{todo.description}</div>
+
+                            {isExpanded && (
+                                <>
+                                    {todo.description && (
+                                        <div style={{ marginTop: "5px", fontStyle: "italic" }}>
+                                            {todo.description}
+                                        </div>
+                                    )}
+                                    <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                                        Added on: {todo.date}
+                                    </div>
+                                    {todo.dueDate && (
+                                        <div style={{ fontSize: "12px", color: "#555" }}>
+                                            Due date: {todo.dueDate}
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </li>
                     );
