@@ -101,7 +101,18 @@ const TodoList = () => {
                 backgroundAttachment: "fixed",
             }}
         >
-            <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
+                <span
+                    style={{
+                        color: "white",
+                        textShadow: "1px 1px 2px black",
+                        fontSize: "16px",
+                    }}
+                >
+                    Total Tasks: {todos.length}
+                </span>
+            </div>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
                 <button
@@ -246,7 +257,9 @@ const TodoList = () => {
                                             overflow: "hidden",
                                             textOverflow: "ellipsis",
                                             flex: 1,
+                                            cursor: "pointer",
                                         }}
+                                        onClick={() => toggleDescription(index)} // Clicking title will toggle description
                                     >
                                         {todo.title}
                                     </span>
@@ -318,25 +331,6 @@ const TodoList = () => {
                                     Due date: {todo.dueDate}
                                 </div>
                             )}
-                            {todo.completed && todo.completedOn && (
-                                <div style={{ fontSize: "12px", color: "#2e7d32", marginTop: "3px" }}>
-                                    Completed on: {todo.completedOn}
-                                </div>
-                            )}
-
-                            {/* Add a click event to toggle description */}
-                            <div
-                                onClick={() => toggleDescription(index)}
-                                style={{
-                                    marginTop: "5px",
-                                    color: "#0066cc",
-                                    cursor: "pointer",
-                                    fontSize: "14px",
-                                    textDecoration: "underline",
-                                }}
-                            >
-                                {todo.showDescription ? "Hide Description" : "Show Description"}
-                            </div>
                         </li>
                     );
                 })}
