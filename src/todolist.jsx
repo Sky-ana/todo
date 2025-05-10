@@ -315,6 +315,13 @@ const TodoList = () => {
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
+
+                            {todo.completed && (
+                                <div style={{ fontSize: "12px", color: "#555" }}>
+                                    Completed on: {todo.completedOn}
+                                </div>
+                            )}
+
                             {!todo.completed && todo.dueDate && (
                                 <div style={{ fontSize: "12px", color: "#555" }}>
                                     Due date: {todo.dueDate}
@@ -328,4 +335,4 @@ const TodoList = () => {
     );
 };
 
-export default TodoList;
+export default TodoList
