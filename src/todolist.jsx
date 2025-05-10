@@ -7,7 +7,7 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
-    const [expandedIndex, setExpandedIndex] = useState(null);
+    const [modalHeight, setModalHeight] = useState(300); // Default height of the modal
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -21,7 +21,7 @@ const TodoList = () => {
     }, [todos]);
 
     const handleAddTodo = () => {
-        if (newTitle.trim() !== "") {
+        if (newTitle.trim() !== "" || newDescription.trim() !== "") {
             const currentDate = new Date().toLocaleString();
             setTodos([
                 ...todos,
@@ -31,6 +31,8 @@ const TodoList = () => {
                     dueDate: newDueDate,
                     completed: false,
                     date: currentDate,
+                    showDescription: false, // Initially, description is hidden
+                    completedOn: null, // Initially no completion date
                 },
             ]);
             setNewTitle("");
@@ -44,10 +46,11 @@ const TodoList = () => {
         const updatedTodos = todos.map((todo, i) => {
             if (i === index) {
                 const isNowCompleted = !todo.completed;
+                const completedOn = isNowCompleted ? new Date().toLocaleString() : null;
                 return {
                     ...todo,
                     completed: isNowCompleted,
-                    completedOn: isNowCompleted ? new Date().toLocaleString() : undefined,
+                    completedOn,
                 };
             }
             return todo;
@@ -59,10 +62,6 @@ const TodoList = () => {
         setTodos(todos.filter((_, i) => i !== index));
     };
 
-    const handleToggleExpand = (index) => {
-        setExpandedIndex(expandedIndex === index ? null : index);
-    };
-
     const calculateDaysLeft = (dueDateStr) => {
         if (!dueDateStr) return null;
         const now = new Date();
@@ -70,6 +69,24 @@ const TodoList = () => {
         const diffTime = dueDate - now;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         return diffDays;
+    };
+
+    // Toggle description visibility
+    const toggleDescription = (index) => {
+        const updatedTodos = todos.map((todo, i) => {
+            if (i === index) {
+                return { ...todo, showDescription: !todo.showDescription };
+            }
+            return todo;
+        });
+        setTodos(updatedTodos);
+    };
+
+    // Function to dynamically adjust the height of the modal based on description
+    const handleDescriptionChange = (e) => {
+        setNewDescription(e.target.value);
+        const scrollHeight = e.target.scrollHeight;
+        setModalHeight(scrollHeight + 150); // Add extra height for buttons, etc.
     };
 
     return (
@@ -84,21 +101,7 @@ const TodoList = () => {
                 backgroundAttachment: "fixed",
             }}
         >
-            <h2 style={{ color: "white", textShadow: "1px 1px 2px black", display: "flex", alignItems: "center", gap: "10px" }}>
-                Todo List
-                <span
-                    style={{
-                        background: "rgba(255, 255, 255, 0.7)",
-                        backdropFilter: "blur(4px)",
-                        padding: "2px 8px",
-                        borderRadius: "8px",
-                        color: "black",
-                        fontSize: "16px",
-                    }}
-                >
-                    {todos.length}
-                </span>
-            </h2>
+            <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
                 <button
@@ -117,6 +120,7 @@ const TodoList = () => {
                 </button>
             </div>
 
+            {/* Modal */}
             {showModal && (
                 <div
                     style={{
@@ -139,6 +143,9 @@ const TodoList = () => {
                             padding: "20px",
                             width: "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+                            height: `${modalHeight}px`, // Dynamically set height
+                            overflow: "hidden",
+                            transition: "height 0.2s ease",
                         }}
                     >
                         <h3>Add New Task</h3>
@@ -152,8 +159,14 @@ const TodoList = () => {
                         <textarea
                             placeholder="Description"
                             value={newDescription}
-                            onChange={(e) => setNewDescription(e.target.value)}
-                            style={{ width: "100%", marginBottom: "10px", padding: "5px", resize: "vertical" }}
+                            onChange={handleDescriptionChange}
+                            style={{
+                                width: "100%",
+                                marginBottom: "10px",
+                                padding: "5px",
+                                minHeight: "50px",
+                                resize: "none",
+                            }}
                         />
                         <input
                             type="date"
@@ -197,53 +210,76 @@ const TodoList = () => {
             )}
 
             <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
-                {[...todos]
-                    .sort((a, b) => {
-                        if (!a.dueDate) return 1;
-                        if (!b.dueDate) return -1;
-                        return new Date(a.dueDate) - new Date(b.dueDate);
-                    })
-                    .map((todo, index) => {
-                        const daysLeft = calculateDaysLeft(todo.dueDate);
-                        return (
-                            <li
-                                key={index}
-                                onClick={() => handleToggleExpand(index)}
+                {todos.map((todo, index) => {
+                    const daysLeft = calculateDaysLeft(todo.dueDate);
+                    return (
+                        <li
+                            key={index}
+                            style={{
+                                border: "1px solid #ccc",
+                                borderRadius: "8px",
+                                padding: "10px",
+                                marginBottom: "10px",
+                                background: "rgba(255, 255, 255, 0.7)",
+                                backdropFilter: "blur(4px)",
+                            }}
+                        >
+                            <div
                                 style={{
-                                    border: "1px solid #ccc",
-                                    borderRadius: "8px",
-                                    padding: "10px",
-                                    marginBottom: "10px",
-                                    background: "rgba(255, 255, 255, 0.7)",
-                                    backdropFilter: "blur(4px)",
-                                    cursor: "pointer",
-                                    wordWrap: "break-word",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
                                 }}
                             >
-                                <div style={{ display: "flex", alignItems: "center" }}>
+                                <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
                                     <input
                                         type="checkbox"
                                         checked={todo.completed}
-                                        onChange={(e) => {
-                                            e.stopPropagation();
-                                            handleToggleCompleted(index);
-                                        }}
+                                        onChange={() => handleToggleCompleted(index)}
                                     />
                                     <span
                                         style={{
                                             textDecoration: todo.completed ? "line-through" : "none",
                                             marginLeft: "10px",
                                             fontWeight: "bold",
+                                            wordWrap: "break-word",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
                                             flex: 1,
                                         }}
                                     >
                                         {todo.title}
                                     </span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    {todo.dueDate && !todo.completed && (
+                                        <span
+                                            style={{
+                                                fontSize: "12px",
+                                                color: daysLeft < 0 ? "red" : "#333",
+                                                fontWeight: "bold",
+                                                marginRight: "10px",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                        >
+                                            {daysLeft < 0
+                                                ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                                : `${daysLeft} day(s) left`}
+                                        </span>
+                                    )}
+                                    {todo.completed && todo.completedOn && (
+                                        <span
+                                            style={{
+                                                fontSize: "12px",
+                                                color: "#2e7d32",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Completed on: {todo.completedOn}
+                                        </span>
+                                    )}
                                     <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteTodo(index);
-                                        }}
+                                        onClick={() => handleDeleteTodo(index)}
                                         style={{
                                             background: "transparent",
                                             color: "red",
@@ -251,45 +287,59 @@ const TodoList = () => {
                                             fontSize: "20px",
                                             fontWeight: "bold",
                                             cursor: "pointer",
-                                            marginLeft: "10px",
+                                            marginLeft: "5px",
                                         }}
                                     >
                                         ×
                                     </button>
                                 </div>
+                            </div>
 
-                                <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                    Added on: {todo.date}
-                                </div>
-                                {todo.dueDate && (
-                                    <div style={{ fontSize: "12px", color: "#555" }}>
-                                        Due date: {todo.dueDate}
-                                    </div>
-                                )}
-
+                            {/* Show description only if it's toggled */}
+                            {todo.showDescription && (
                                 <div
                                     style={{
-                                        fontSize: "12px",
-                                        color: todo.completed ? "#2e7d32" : daysLeft < 0 ? "red" : "#333",
-                                        fontWeight: "bold",
-                                        textAlign: "right",
+                                        marginTop: "5px",
+                                        fontStyle: "italic",
+                                        wordWrap: "break-word",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
                                     }}
                                 >
-                                    {todo.completed
-                                        ? `Completed on: ${todo.completedOn}`
-                                        : daysLeft < 0
-                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                        : `${daysLeft} day(s) left`}
+                                    {todo.description}
                                 </div>
+                            )}
 
-                                {expandedIndex === index && todo.description && (
-                                    <div style={{ marginTop: "5px", fontStyle: "italic" }}>
-                                        {todo.description}
-                                    </div>
-                                )}
-                            </li>
-                        );
-                    })}
+                            <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                                Added on: {todo.date}
+                            </div>
+                            {todo.dueDate && (
+                                <div style={{ fontSize: "12px", color: "#555" }}>
+                                    Due date: {todo.dueDate}
+                                </div>
+                            )}
+                            {todo.completed && todo.completedOn && (
+                                <div style={{ fontSize: "12px", color: "#2e7d32", marginTop: "3px" }}>
+                                    Completed on: {todo.completedOn}
+                                </div>
+                            )}
+
+                            {/* Add a click event to toggle description */}
+                            <div
+                                onClick={() => toggleDescription(index)}
+                                style={{
+                                    marginTop: "5px",
+                                    color: "#0066cc",
+                                    cursor: "pointer",
+                                    fontSize: "14px",
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                {todo.showDescription ? "Hide Description" : "Show Description"}
+                            </div>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );
