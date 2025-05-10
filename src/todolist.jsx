@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState("");
+
+    // Load todos from localStorage on initial render
+    useEffect(() => {
+        const storedTodos = JSON.parse(localStorage.getItem("todos"));
+        if (storedTodos) {
+            setTodos(storedTodos);
+        }
+    }, []);
+
+    // Save todos to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }, [todos]);
 
     const handleAddTodo = () => {
         if (newTodo.trim() !== "") {
