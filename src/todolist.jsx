@@ -32,6 +32,7 @@ const TodoList = () => {
                     completed: false,
                     date: currentDate,
                     showDescription: false, // Initially, description is hidden
+                    completedOn: null, // Initially no completion date
                 },
             ]);
             setNewTitle("");
@@ -45,10 +46,11 @@ const TodoList = () => {
         const updatedTodos = todos.map((todo, i) => {
             if (i === index) {
                 const isNowCompleted = !todo.completed;
+                const completedOn = isNowCompleted ? new Date().toLocaleString() : null;
                 return {
                     ...todo,
                     completed: isNowCompleted,
-                    completedOn: isNowCompleted ? new Date().toLocaleString() : undefined,
+                    completedOn,
                 };
             }
             return todo;
@@ -250,7 +252,7 @@ const TodoList = () => {
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
-                                    {todo.dueDate && (
+                                    {todo.dueDate && !todo.completed && (
                                         <span
                                             style={{
                                                 fontSize: "12px",
@@ -263,6 +265,17 @@ const TodoList = () => {
                                             {daysLeft < 0
                                                 ? `Overdue by ${Math.abs(daysLeft)} day(s)`
                                                 : `${daysLeft} day(s) left`}
+                                        </span>
+                                    )}
+                                    {todo.completed && todo.completedOn && (
+                                        <span
+                                            style={{
+                                                fontSize: "12px",
+                                                color: "#2e7d32",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Completed on: {todo.completedOn}
                                         </span>
                                     )}
                                     <button
