@@ -81,9 +81,7 @@ const TodoList = () => {
     };
 
     const getDisplayTitle = (todo) => {
-        return todo.showDescription || todo.title.length <= 25
-            ? todo.title
-            : `${todo.title.slice(0, 10)}...`;
+        return todo.showDescription ? todo.title : (todo.title.length <= 10 ? todo.title : `${todo.title.slice(0, 5)}...`);
     };
 
     return (
@@ -256,32 +254,19 @@ const TodoList = () => {
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
-                                    {todo.completed ? (
-                                        <span style={{
-                                            fontSize: "12px",
-                                            color: "#2e7d32",
-                                            fontWeight: "bold",
-                                            marginRight: "10px",
-                                        }}>
-                                            Completed
-                                        </span>
-                                    ) : (
-                                        <>
-                                            {todo.dueDate && (
-                                                <span style={{
-                                                    fontSize: "12px",
-                                                    color: daysLeft < 0 ? "red" : "#333",
-                                                    fontWeight: "bold",
-                                                    marginRight: "10px",
-                                                    whiteSpace: "nowrap",
-                                                }}>
-                                                    {daysLeft < 0
-                                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                                        : `${daysLeft} day(s) left`}
-                                                </span>
-                                            )}
-                                        </>
-                                    )}
+                                    <span style={{
+                                        fontSize: "12px",
+                                        color: todo.completed ? "#2e7d32" : (daysLeft < 0 ? "red" : "#333"),
+                                        fontWeight: "bold",
+                                        marginRight: "10px",
+                                        whiteSpace: "nowrap",
+                                    }}>
+                                        {todo.completed
+                                            ? "Completed"
+                                            : daysLeft < 0
+                                                ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                                : `${daysLeft} day(s) left`}
+                                    </span>
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -315,18 +300,13 @@ const TodoList = () => {
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
-
-                            {todo.completed && (
-                                <div style={{ fontSize: "12px", color: "#555" }}>
-                                    Completed on: {todo.completedOn}
-                                </div>
-                            )}
-
-                            {!todo.completed && todo.dueDate && (
-                                <div style={{ fontSize: "12px", color: "#555" }}>
-                                    Due date: {todo.dueDate}
-                                </div>
-                            )}
+                            <div style={{ fontSize: "12px", color: "#555" }}>
+                                {todo.completed && todo.completedOn
+                                    ? `Completed on: ${todo.completedOn}`
+                                    : todo.dueDate
+                                        ? `Due date: ${todo.dueDate}`
+                                        : null}
+                            </div>
                         </li>
                     );
                 })}
@@ -335,4 +315,4 @@ const TodoList = () => {
     );
 };
 
-export default TodoList
+export default TodoList;
