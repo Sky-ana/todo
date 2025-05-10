@@ -7,6 +7,7 @@ const TodoList = () => {
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [newDueDate, setNewDueDate] = useState("");
+    const [modalHeight, setModalHeight] = useState(300);
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -82,6 +83,8 @@ const TodoList = () => {
 
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
+        const scrollHeight = e.target.scrollHeight;
+        setModalHeight(scrollHeight + 150);
     };
 
     return (
@@ -97,9 +100,19 @@ const TodoList = () => {
             }}
         >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>
-                    Todo List {todos.length}
-                </h2>
+                <div
+                    style={{
+                        padding: "10px 15px",
+                        background: "rgba(255, 255, 255, 0.7)",
+                        borderRadius: "8px",
+                        backdropFilter: "blur(4px)",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                    }}
+                >
+                    <h2 style={{ margin: 0, color: "#333" }}>
+                        Todo List {todos.length}
+                    </h2>
+                </div>
             </div>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
@@ -141,8 +154,9 @@ const TodoList = () => {
                             padding: "20px",
                             width: "300px",
                             boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-                            maxHeight: "90vh",
-                            overflowY: "auto",
+                            height: `${modalHeight}px`,
+                            overflow: "hidden",
+                            transition: "height 0.2s ease",
                         }}
                     >
                         <h3>Add New Task</h3>
