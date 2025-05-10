@@ -50,50 +50,63 @@ const TodoList = () => {
                     Add
                 </button>
             </div>
-            <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
+
+            {/* Grid container for tasks */}
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+                    gap: "15px",
+                    marginTop: "20px",
+                }}
+            >
                 {todos.map((todo, index) => (
-                    <li
+                    <div
                         key={index}
                         style={{
                             border: "1px solid #ccc",
                             borderRadius: "8px",
                             padding: "10px",
-                            marginBottom: "10px",
-                            display: "flex",
-                            alignItems: "center",
                             background: "#f9f9f9",
+                            height: "150px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
                         }}
                     >
-                        <input
-                            type="checkbox"
-                            checked={todo.completed}
-                            onChange={() => handleToggleCompleted(index)}
-                        />
-                        <span
-                            style={{
-                                textDecoration: todo.completed ? "line-through" : "none",
-                                marginLeft: "10px",
-                                flex: 1,
-                            }}
-                        >
-                            {todo.text}
-                        </span>
+                        <div>
+                            <input
+                                type="checkbox"
+                                checked={todo.completed}
+                                onChange={() => handleToggleCompleted(index)}
+                            />
+                            <span
+                                style={{
+                                    textDecoration: todo.completed ? "line-through" : "none",
+                                    marginLeft: "10px",
+                                    wordBreak: "break-word",
+                                }}
+                            >
+                                {todo.text}
+                            </span>
+                        </div>
                         <button
                             onClick={() => handleDeleteTodo(index)}
                             style={{
                                 background: "red",
                                 color: "white",
                                 border: "none",
-                                padding: "5px 10px",
-                                cursor: "pointer",
+                                padding: "5px",
                                 borderRadius: "4px",
+                                cursor: "pointer",
+                                alignSelf: "flex-end",
                             }}
                         >
                             Delete
                         </button>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
