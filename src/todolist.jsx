@@ -51,6 +51,7 @@ const TodoList = () => {
                     ...todo,
                     completed: isNowCompleted,
                     completedOn,
+                    showDescription: true,
                 };
             }
             return todo;
@@ -85,6 +86,12 @@ const TodoList = () => {
         setNewDescription(e.target.value);
         const scrollHeight = e.target.scrollHeight;
         setModalHeight(scrollHeight + 200);
+    };
+
+    const getDisplayTitle = (todo) => {
+        return todo.showDescription || todo.title.length <= 5
+            ? todo.title
+            : `${todo.title.substring(0, 3)}..`;
     };
 
     return (
@@ -252,25 +259,20 @@ const TodoList = () => {
                                         onChange={() => handleToggleCompleted(index)}
                                     />
                                     <span
-                                        title={todo.title}
                                         style={{
                                             textDecoration: todo.completed ? "line-through" : "none",
                                             marginLeft: "10px",
                                             fontWeight: "bold",
-                                            overflow: "hidden",
                                             whiteSpace: "nowrap",
+                                            overflow: "hidden",
                                             textOverflow: "ellipsis",
-                                            maxWidth: "150px",
-                                            flexShrink: 1,
+                                            maxWidth: "120px",
                                             cursor: "pointer",
                                         }}
                                         onClick={() => toggleDescription(index)}
+                                        title={todo.title}
                                     >
-                                        {todo.showDescription
-                                            ? todo.title
-                                            : todo.title.length > 6
-                                            ? todo.title.slice(0, 3) + ".."
-                                            : todo.title}
+                                        {getDisplayTitle(todo)}
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -323,8 +325,6 @@ const TodoList = () => {
                                         marginTop: "5px",
                                         fontStyle: "italic",
                                         wordWrap: "break-word",
-                                        overflow: "hidden",
-                                        textOverflow: "ellipsis",
                                     }}
                                 >
                                     {todo.description}
