@@ -272,16 +272,11 @@
     font-style: italic;
     word-wrap: break-word;
     color: #555;
-    /* font-size: 0.9rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    max-height: 4.5em; */
     word-wrap: break-word;
     overflow-y: auto;
-    max-height: 90px;
+    max-height: 120px;
     scrollbar-width: thin;
+    min-height: 40px;
 }
 
 .todo-meta {
@@ -372,14 +367,15 @@
 
 @media (max-width: 480px) {
     .task-desc {
-        max-height: 40px;
+        max-height: 80px;
+        min-height: 60px;
     }
 
-    .todo-item {
-        word-break: break-word;
+    .todo-textarea,
+    .edit-input.no-resize {
+        min-height: 120px;
     }
 }
-
 @media (max-width: 480px) {
     .todo-item {
         flex-direction: row;
