@@ -256,27 +256,43 @@ const TodoList = () => {
                                     </span>
                                 </div>
                                 <div style={{ display: "flex", alignItems: "center" }}>
-                                    {todo.dueDate && !todo.completed && (
-                                        <span style={{
-                                            fontSize: "12px",
-                                            color: daysLeft < 0 ? "red" : "#333",
-                                            fontWeight: "bold",
-                                            marginRight: "10px",
-                                            whiteSpace: "nowrap",
-                                        }}>
-                                            {daysLeft < 0
-                                                ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                                : `${daysLeft} day(s) left`}
-                                        </span>
-                                    )}
-                                    {todo.completed && todo.completedOn && (
-                                        <span style={{
-                                            fontSize: "12px",
-                                            color: "#2e7d32",
-                                            fontWeight: "bold",
-                                        }}>
-                                            Completed on: {todo.completedOn}
-                                        </span>
+                                    {todo.completed ? (
+                                        <>
+                                            <span style={{
+                                                fontSize: "12px",
+                                                color: "#2e7d32",
+                                                fontWeight: "bold",
+                                                marginRight: "10px",
+                                                whiteSpace: "nowrap",
+                                            }}>
+                                                Completed
+                                            </span>
+                                            {todo.completedOn && (
+                                                <span style={{
+                                                    fontSize: "12px",
+                                                    color: "#2e7d32",
+                                                    fontWeight: "bold",
+                                                }}>
+                                                    Completed on: {todo.completedOn}
+                                                </span>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {todo.dueDate && (
+                                                <span style={{
+                                                    fontSize: "12px",
+                                                    color: daysLeft < 0 ? "red" : "#333",
+                                                    fontWeight: "bold",
+                                                    marginRight: "10px",
+                                                    whiteSpace: "nowrap",
+                                                }}>
+                                                    {daysLeft < 0
+                                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                                        : `${daysLeft} day(s) left`}
+                                                </span>
+                                            )}
+                                        </>
                                     )}
                                     <button
                                         onClick={(e) => {
@@ -311,7 +327,7 @@ const TodoList = () => {
                             <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                 Added on: {todo.date}
                             </div>
-                            {todo.dueDate && (
+                            {todo.dueDate && !todo.completed && (
                                 <div style={{ fontSize: "12px", color: "#555" }}>
                                     Due date: {todo.dueDate}
                                 </div>
