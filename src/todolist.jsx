@@ -110,7 +110,7 @@ const TodoList = () => {
                         fontSize: "16px",
                     }}
                 >
-                    Total Tasks: {todos.length}
+                    {todos.length}
                 </span>
             </div>
 
