@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import backgroundImage from "./pics/magic.jpeg"; // ✅ updated file name
+import backgroundImage from "./pics/magic.jpeg";
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
-    const [newTodo, setNewTodo] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [newTitle, setNewTitle] = useState("");
+    const [newDescription, setNewDescription] = useState("");
 
     useEffect(() => {
         const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -17,18 +19,20 @@ const TodoList = () => {
     }, [todos]);
 
     const handleAddTodo = () => {
-        if (newTodo.trim() !== "") {
-            const currentDate = new Date();
-            const formattedDate = currentDate.toLocaleString();
+        if (newTitle.trim() !== "" || newDescription.trim() !== "") {
+            const currentDate = new Date().toLocaleString();
             setTodos([
                 ...todos,
                 {
-                    text: newTodo,
+                    title: newTitle,
+                    description: newDescription,
                     completed: false,
-                    date: formattedDate,
+                    date: currentDate,
                 },
             ]);
-            setNewTodo("");
+            setNewTitle("");
+            setNewDescription("");
+            setShowModal(false);
         }
     };
 
@@ -64,18 +68,95 @@ const TodoList = () => {
             }}
         >
             <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
-            <div>
-                <input
-                    type="text"
-                    value={newTodo}
-                    onChange={(e) => setNewTodo(e.target.value)}
-                    placeholder="Enter a new task"
-                    style={{ padding: "5px", width: "70%" }}
-                />
-                <button onClick={handleAddTodo} style={{ padding: "5px" }}>
-                    Add
-                </button>
-            </div>
+
+            <button
+                onClick={() => setShowModal(true)}
+                style={{
+                    padding: "10px 15px",
+                    fontSize: "16px",
+                    backgroundColor: "#0066cc",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                }}
+            >
+                Add Task
+            </button>
+
+            {/* Modal */}
+            {showModal && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 1000,
+                    }}
+                >
+                    <div
+                        style={{
+                            backgroundColor: "white",
+                            borderRadius: "10px",
+                            padding: "20px",
+                            width: "300px",
+                            boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+                        }}
+                    >
+                        <h3>Add New Task</h3>
+                        <input
+                            type="text"
+                            placeholder="Title"
+                            value={newTitle}
+                            onChange={(e) => setNewTitle(e.target.value)}
+                            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+                        />
+                        <textarea
+                            placeholder="Description"
+                            value={newDescription}
+                            onChange={(e) => setNewDescription(e.target.value)}
+                            style={{ width: "100%", marginBottom: "10px", padding: "5px" }}
+                        />
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    setNewTitle("");
+                                    setNewDescription("");
+                                }}
+                                style={{
+                                    backgroundColor: "#aaa",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "5px 10px",
+                                    borderRadius: "5px",
+                                }}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleAddTodo}
+                                style={{
+                                    backgroundColor: "#28a745",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "5px 10px",
+                                    borderRadius: "5px",
+                                }}
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
                 {todos.map((todo, index) => (
                     <li
@@ -99,10 +180,11 @@ const TodoList = () => {
                                 style={{
                                     textDecoration: todo.completed ? "line-through" : "none",
                                     marginLeft: "10px",
+                                    fontWeight: "bold",
                                     flex: 1,
                                 }}
                             >
-                                {todo.text}
+                                {todo.title}
                             </span>
                             <button
                                 onClick={() => handleDeleteTodo(index)}
@@ -119,6 +201,11 @@ const TodoList = () => {
                                 Delete
                             </button>
                         </div>
+                        {todo.description && (
+                            <div style={{ marginTop: "5px", fontStyle: "italic" }}>
+                                {todo.description}
+                            </div>
+                        )}
                         <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                             Added on: {todo.date}
                         </div>
