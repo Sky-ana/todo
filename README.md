@@ -1,4 +1,4 @@
-# 3MINDS : To-do List
+# 3MINDS' To-do List
 
 ## Overview
 This is a simple and interactive to-do list app that allows users to manage tasks with functionalities such as adding, editing, marking as complete, and deleting tasks. The app also allows you to set and track due dates for tasks.
