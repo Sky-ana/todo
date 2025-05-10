@@ -84,7 +84,7 @@ const TodoList = () => {
     const handleDescriptionChange = (e) => {
         setNewDescription(e.target.value);
         const scrollHeight = e.target.scrollHeight;
-        setModalHeight(scrollHeight + 150);
+        setModalHeight(scrollHeight + 200);  // Adjust to avoid clipping
     };
 
     return (
