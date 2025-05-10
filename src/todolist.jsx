@@ -69,20 +69,22 @@ const TodoList = () => {
         >
             <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
 
-            <button
-                onClick={() => setShowModal(true)}
-                style={{
-                    padding: "10px 15px",
-                    fontSize: "16px",
-                    backgroundColor: "#0066cc",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                }}
-            >
-                Add Task
-            </button>
+            <div style={{ textAlign: "right", marginBottom: "10px" }}>
+                <button
+                    onClick={() => setShowModal(true)}
+                    style={{
+                        padding: "10px 15px",
+                        fontSize: "16px",
+                        backgroundColor: "#0066cc",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                    }}
+                >
+                    Add Task
+                </button>
+            </div>
 
             {/* Modal */}
             {showModal && (
@@ -189,16 +191,16 @@ const TodoList = () => {
                             <button
                                 onClick={() => handleDeleteTodo(index)}
                                 style={{
-                                    background: "red",
-                                    color: "white",
+                                    background: "transparent",
+                                    color: "red",
                                     border: "none",
-                                    padding: "5px 10px",
+                                    fontSize: "20px",
+                                    fontWeight: "bold",
                                     cursor: "pointer",
-                                    borderRadius: "4px",
                                     marginLeft: "10px",
                                 }}
                             >
-                                Delete
+                                ×
                             </button>
                         </div>
                         {todo.description && (
