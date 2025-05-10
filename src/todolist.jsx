@@ -318,25 +318,6 @@ const TodoList = () => {
                                     Due date: {todo.dueDate}
                                 </div>
                             )}
-                            {todo.completed && todo.completedOn && (
-                                <div style={{ fontSize: "12px", color: "#2e7d32", marginTop: "3px" }}>
-                                    Completed on: {todo.completedOn}
-                                </div>
-                            )}
-
-                            {/* Add a click event to toggle description */}
-                            <div
-                                onClick={() => toggleDescription(index)}
-                                style={{
-                                    marginTop: "5px",
-                                    color: "#0066cc",
-                                    cursor: "pointer",
-                                    fontSize: "14px",
-                                    textDecoration: "underline",
-                                }}
-                            >
-                                {todo.showDescription ? "Hide Description" : "Show Description"}
-                            </div>
                         </li>
                     );
                 })}
