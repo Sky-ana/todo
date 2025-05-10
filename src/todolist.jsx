@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import backgroundImage from "./pics/magic.jpeg"; // ✅ import the background image
+import backgroundImage from "./pics/magic.jpeg"; // ✅ updated file name
 
 const TodoList = () => {
     const [todos, setTodos] = useState([]);
@@ -46,12 +46,13 @@ const TodoList = () => {
     return (
         <div
             style={{
-                padding: "20px",
                 minHeight: "100vh",
+                padding: "20px",
                 backgroundImage: `url(${backgroundImage})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed", // 🔒 Keeps image fixed while scrolling
             }}
         >
             <h2 style={{ color: "white", textShadow: "1px 1px 2px black" }}>Todo List</h2>
