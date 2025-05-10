@@ -197,93 +197,99 @@ const TodoList = () => {
             )}
 
             <ul style={{ listStyle: "none", padding: 0, marginTop: "20px" }}>
-                {todos.map((todo, index) => {
-                    const daysLeft = calculateDaysLeft(todo.dueDate);
-                    return (
-                        <li
-                            key={index}
-                            onClick={() => handleToggleExpand(index)}
-                            style={{
-                                border: "1px solid #ccc",
-                                borderRadius: "8px",
-                                padding: "10px",
-                                marginBottom: "10px",
-                                background: "rgba(255, 255, 255, 0.7)",
-                                backdropFilter: "blur(4px)",
-                                cursor: "pointer",
-                                wordWrap: "break-word",
-                            }}
-                        >
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <input
-                                    type="checkbox"
-                                    checked={todo.completed}
-                                    onChange={(e) => {
-                                        e.stopPropagation();
-                                        handleToggleCompleted(index);
-                                    }}
-                                />
-                                <span
-                                    style={{
-                                        textDecoration: todo.completed ? "line-through" : "none",
-                                        marginLeft: "10px",
-                                        fontWeight: "bold",
-                                        flex: 1,
-                                    }}
-                                >
-                                    {todo.title}
-                                </span>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteTodo(index);
-                                    }}
-                                    style={{
-                                        background: "transparent",
-                                        color: "red",
-                                        border: "none",
-                                        fontSize: "20px",
-                                        fontWeight: "bold",
-                                        cursor: "pointer",
-                                        marginLeft: "10px",
-                                    }}
-                                >
-                                    ×
-                                </button>
-                            </div>
-
-                            <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                Added on: {todo.date}
-                            </div>
-                            {todo.dueDate && (
-                                <div style={{ fontSize: "12px", color: "#555" }}>
-                                    Due date: {todo.dueDate}
-                                </div>
-                            )}
-
-                            <div
+                {[...todos]
+                    .sort((a, b) => {
+                        if (!a.dueDate) return 1;
+                        if (!b.dueDate) return -1;
+                        return new Date(a.dueDate) - new Date(b.dueDate);
+                    })
+                    .map((todo, index) => {
+                        const daysLeft = calculateDaysLeft(todo.dueDate);
+                        return (
+                            <li
+                                key={index}
+                                onClick={() => handleToggleExpand(index)}
                                 style={{
-                                    fontSize: "12px",
-                                    color: todo.completed ? "#2e7d32" : daysLeft < 0 ? "red" : "#333",
-                                    fontWeight: "bold",
-                                    textAlign: "right",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "8px",
+                                    padding: "10px",
+                                    marginBottom: "10px",
+                                    background: "rgba(255, 255, 255, 0.7)",
+                                    backdropFilter: "blur(4px)",
+                                    cursor: "pointer",
+                                    wordWrap: "break-word",
                                 }}
                             >
-                                {todo.completed
-                                    ? `Completed on: ${todo.completedOn}`
-                                    : daysLeft < 0
-                                    ? `Overdue by ${Math.abs(daysLeft)} day(s)`
-                                    : `${daysLeft} day(s) left`}
-                            </div>
-
-                            {expandedIndex === index && todo.description && (
-                                <div style={{ marginTop: "5px", fontStyle: "italic" }}>
-                                    {todo.description}
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={todo.completed}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleToggleCompleted(index);
+                                        }}
+                                    />
+                                    <span
+                                        style={{
+                                            textDecoration: todo.completed ? "line-through" : "none",
+                                            marginLeft: "10px",
+                                            fontWeight: "bold",
+                                            flex: 1,
+                                        }}
+                                    >
+                                        {todo.title}
+                                    </span>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteTodo(index);
+                                        }}
+                                        style={{
+                                            background: "transparent",
+                                            color: "red",
+                                            border: "none",
+                                            fontSize: "20px",
+                                            fontWeight: "bold",
+                                            cursor: "pointer",
+                                            marginLeft: "10px",
+                                        }}
+                                    >
+                                        ×
+                                    </button>
                                 </div>
-                            )}
-                        </li>
-                    );
-                })}
+
+                                <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                                    Added on: {todo.date}
+                                </div>
+                                {todo.dueDate && (
+                                    <div style={{ fontSize: "12px", color: "#555" }}>
+                                        Due date: {todo.dueDate}
+                                    </div>
+                                )}
+
+                                <div
+                                    style={{
+                                        fontSize: "12px",
+                                        color: todo.completed ? "#2e7d32" : daysLeft < 0 ? "red" : "#333",
+                                        fontWeight: "bold",
+                                        textAlign: "right",
+                                    }}
+                                >
+                                    {todo.completed
+                                        ? `Completed on: ${todo.completedOn}`
+                                        : daysLeft < 0
+                                        ? `Overdue by ${Math.abs(daysLeft)} day(s)`
+                                        : `${daysLeft} day(s) left`}
+                                </div>
+
+                                {expandedIndex === index && todo.description && (
+                                    <div style={{ marginTop: "5px", fontStyle: "italic" }}>
+                                        {todo.description}
+                                    </div>
+                                )}
+                            </li>
+                        );
+                    })}
             </ul>
         </div>
     );
