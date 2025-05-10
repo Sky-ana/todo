@@ -85,7 +85,8 @@ const TodoList = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             marginBottom: "10px",
-                            background: "#f9f9f9",
+                            background: "rgba(255, 255, 255, 0.7)",
+                            backdropFilter: "blur(4px)",
                         }}
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
