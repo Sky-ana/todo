@@ -100,19 +100,22 @@ const TodoList = () => {
             }}
         >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div
-                    style={{
-                        padding: "10px 15px",
-                        background: "rgba(255, 255, 255, 0.7)",
-                        borderRadius: "8px",
-                        backdropFilter: "blur(4px)",
-                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                    }}
-                >
-                    <h2 style={{ margin: 0, color: "#333" }}>
-                        Todo List {todos.length}
-                    </h2>
-                </div>
+                <h2 style={{ color: "white", textShadow: "1px 1px 2px black", display: "flex", alignItems: "center", gap: "10px" }}>
+                    Todo List
+                    <span
+                        style={{
+                            padding: "5px 10px",
+                            background: "rgba(255, 255, 255, 0.7)",
+                            borderRadius: "8px",
+                            backdropFilter: "blur(4px)",
+                            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                            fontSize: "16px",
+                            color: "#333"
+                        }}
+                    >
+                        {todos.length}
+                    </span>
+                </h2>
             </div>
 
             <div style={{ textAlign: "right", marginBottom: "10px" }}>
